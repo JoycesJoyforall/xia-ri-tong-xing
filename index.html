@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="夏日同行">
+<meta name="theme-color" content="#CF542A">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" href="./apple-touch-icon.png">
+<link rel="manifest" href="./manifest.json">
+<title>夏日同行 · Our Summer Journey</title>
+<style>
+  :root{
+    /* Huitong brand palette */
+    --paper:#F1EEE0; --panel:#FFFFFF; --panel-2:#FAF8EF;
+    --ink:#33352F; --ink-soft:#71726A; --line:#DCDBCB;
+    --read:#CF542A; --project:#BC7C24; --play:#4F8E72; --chores:#577E97;
+    --celebrate:#B23A1E; --trail:#C9C7AE; --trail-done:#CF542A; --gold:#E2B04A;
+    --free:#8E9A86;
+    --cream:#F7F0C6; --sage:#9EC597; --blue:#8BABB7; --sage2:#E5E7DC;
+    --r:18px; --shadow:0 6px 0 rgba(51,53,47,.07), 0 12px 30px rgba(120,90,40,.10);
+    --font: -apple-system, system-ui, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    --display: "Freight Big Pro", Georgia, "Times New Roman", "STZhongsong", "华文中宋", "Songti SC", "Noto Serif CJK SC", serif;
+    --serif:"STSong","华文宋体","Songti SC","Noto Serif CJK SC","SimSun",serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:var(--font); color:var(--ink); background:var(--paper);
+    background-image:
+      radial-gradient(circle at 12% 16%, rgba(158,197,151,.16), transparent 42%),
+      radial-gradient(circle at 88% 84%, rgba(139,171,183,.14), transparent 44%);
+    -webkit-font-smoothing:antialiased; line-height:1.4;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  #app{max-width:560px; margin:0 auto; padding:14px 14px 64px;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit}
+  button:focus-visible, [tabindex]:focus-visible{outline:3px solid var(--celebrate); outline-offset:3px; border-radius:8px}
+  .en{color:var(--ink-soft); font-weight:600; font-size:.78em; letter-spacing:.2px}
+  .brand h1,.sheet h2,.phead .nm,.nextline .name,.plan-intro .t,.mtop .nm,.celebrate h2,.collbox h3,.deckwrap h4{font-family:var(--display); letter-spacing:.3px}
+
+  header{display:flex; align-items:center; gap:9px; margin:6px 2px 14px}
+  .brand{flex:1; min-width:0}
+  .brand h1{margin:0; font-size:1.3rem; line-height:1.15; letter-spacing:.5px}
+  .brand .en{display:block; margin-top:1px}
+  .iconbtn{width:44px; height:44px; border-radius:14px; background:var(--panel); box-shadow:var(--shadow);
+    font-size:1.2rem; display:grid; place-items:center; flex:0 0 auto; transition:transform .12s;}
+  .iconbtn:active{transform:translateY(2px)}
+
+  .card{background:var(--panel); border-radius:var(--r); box-shadow:var(--shadow); padding:16px}
+  .stack{display:flex; flex-direction:column; gap:14px}
+  .warnbar{background:#FFE7D8; color:#9A3412; border-radius:12px; padding:10px 12px; font-size:.8rem; font-weight:700; margin-bottom:14px}
+  .empty{color:var(--ink-soft); font-size:.88rem; font-weight:600; padding:8px 2px}
+
+  /* MAP */
+  .mapcard{padding:14px 10px 8px; overflow:hidden}
+  .nextline{display:flex; align-items:center; gap:10px; padding:2px 6px 12px}
+  .nextflag{font-size:1.5rem}
+  .nextline .label{font-size:.72rem; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:.6px}
+  .nextline .name{font-size:1.05rem; font-weight:800; line-height:1.15}
+  .nextline .cel{font-size:.82rem; color:var(--celebrate); font-weight:700; margin-top:2px}
+  .meterwrap{padding:0 6px 8px}
+  .meter{height:14px; border-radius:99px; background:#F1E4CE; overflow:hidden; box-shadow:inset 0 2px 4px rgba(122,75,40,.12)}
+  .meter > i{display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--gold),var(--read)); transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .meterlabel{display:flex; justify-content:space-between; font-size:.74rem; font-weight:700; color:var(--ink-soft); margin-top:6px}
+  svg.trail{display:block; width:100%; height:auto}
+  .marker-num{font-weight:800; font-size:15px}
+
+  .zora-banner{display:flex; align-items:center; gap:12px; background:linear-gradient(120deg,#FFF1D9,#FFE3E0);
+    border-radius:var(--r); box-shadow:var(--shadow); padding:14px; width:100%; text-align:left; border:3px solid #FFD7B0}
+  .zora-banner .big{font-size:1.7rem}
+  .zora-banner .t{font-weight:800; font-size:1rem}
+  .zora-banner .s{font-size:.8rem; color:var(--ink-soft); font-weight:700}
+
+  .who-title{font-weight:800; font-size:1rem; margin:2px 4px 10px; display:flex; align-items:baseline; gap:8px}
+  .players{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+  .pcard{background:var(--panel); border-radius:var(--r); box-shadow:var(--shadow); padding:14px 12px;
+    display:flex; align-items:center; gap:12px; text-align:left; transition:transform .12s;}
+  .pcard:active{transform:translateY(2px)}
+  .avatar{width:50px; height:50px; border-radius:50%; display:grid; place-items:center; font-size:1.6rem; flex:0 0 auto;
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,.7)}
+  .pcard .nm{font-weight:800; font-size:1.02rem; line-height:1.1}
+  .pcard .coins{font-size:.82rem; color:var(--ink-soft); font-weight:700; margin-top:2px}
+
+  /* PLAYER */
+  .back{display:inline-flex; align-items:center; gap:8px; font-weight:800; padding:8px 4px; font-size:.95rem}
+  .phead{display:flex; align-items:center; gap:14px; margin:6px 2px 14px}
+  .phead .avatar{width:62px; height:62px; font-size:2rem}
+  .phead .nm{font-size:1.4rem; font-weight:800; line-height:1}
+  .phead .coins{font-size:1rem; color:var(--read); font-weight:800; margin-top:4px}
+  .planbtn{display:flex; align-items:center; gap:10px; width:100%; background:linear-gradient(120deg,#FFE9A8,#FFC9C2);
+    border-radius:var(--r); box-shadow:var(--shadow); padding:13px 14px; margin-bottom:16px; font-weight:800; font-size:1rem; border:3px solid #FFD37A}
+  .planbtn .big{font-size:1.4rem}
+  .lanes{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:18px}
+  .lane{border-radius:var(--r); padding:16px 12px 14px; color:#fff; text-align:left; box-shadow:var(--shadow);
+    position:relative; min-height:108px; display:flex; flex-direction:column; justify-content:space-between; transition:transform .1s;}
+  .lane:active{transform:scale(.97)}
+  .lane .glyph{font-size:1.7rem; line-height:1; font-family:var(--serif)}
+  .lane .lname{font-weight:800; font-size:1rem; margin-top:8px}
+  .lane .lname .en{color:rgba(255,255,255,.85)}
+  .lane .tap{position:absolute; right:12px; bottom:12px; background:rgba(255,255,255,.25); border-radius:99px; padding:4px 10px; font-size:.74rem; font-weight:800}
+  .lane .cnt{position:absolute; top:12px; right:12px; background:rgba(255,255,255,.92); color:var(--ink); min-width:26px; height:26px; padding:0 7px; border-radius:99px; font-weight:800; font-size:.82rem; display:grid; place-items:center}
+
+  .collbox h3{margin:0 0 4px; font-size:1rem; font-weight:800}
+  .collbox .sub{color:var(--ink-soft); font-size:.8rem; font-weight:700; margin-bottom:12px}
+  .seals{display:flex; flex-wrap:wrap; gap:10px}
+  .seal{width:48px; height:48px; border-radius:13px; display:grid; place-items:center; color:#fff; font-weight:800; font-size:1.35rem;
+    position:relative; box-shadow:0 3px 0 rgba(43,43,51,.12); transform:rotate(-4deg); font-family:var(--serif); cursor:pointer}
+  .seal:nth-child(even){transform:rotate(3deg)}
+  .seal::after{content:""; position:absolute; inset:5px; border:1.5px solid rgba(255,255,255,.55); border-radius:8px}
+  .seal.haspic{box-shadow:0 0 0 2px #fff, 0 0 0 4px var(--gold), 0 3px 0 rgba(43,43,51,.12)}
+  .seal .dot{position:absolute; bottom:-3px; right:-3px; font-size:.7rem; background:#fff; border-radius:50%; width:17px; height:17px; display:grid; place-items:center; box-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .seal.pop{animation:pop .55s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes pop{0%{transform:scale(1.6) rotate(-12deg); opacity:0}60%{transform:scale(.95) rotate(4deg)}100%{transform:rotate(-4deg)}}
+
+  /* MEMORIES */
+  .mtop{display:flex; gap:10px; align-items:center; justify-content:space-between; margin:6px 2px 12px}
+  .mwall{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
+  .mcard{background:var(--panel); border-radius:16px; overflow:hidden; box-shadow:var(--shadow); cursor:pointer}
+  .mcard .ph{width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:#F1E4CE}
+  .mcard .nophoto{aspect-ratio:1/1; display:grid; place-items:center; font-size:2.2rem; background:linear-gradient(135deg,#FFF1D9,#FCE5DF); font-family:var(--serif)}
+  .mcard .body{padding:10px 11px}
+  .mcard .who{font-weight:800; font-size:.82rem; display:flex; align-items:center; gap:6px}
+  .miniseal{width:22px; height:22px; border-radius:6px; display:grid; place-items:center; color:#fff; font-size:.8rem; font-family:var(--serif); flex:0 0 auto}
+  .mcard .when{font-size:.72rem; color:var(--ink-soft); font-weight:700; margin:3px 0 2px; display:flex; gap:6px; flex-wrap:wrap}
+  .mcard .nt{font-size:.86rem; margin-top:3px}
+  .pill{background:#F1E4CE; border-radius:99px; padding:1px 8px; font-weight:700; color:var(--ink-soft)}
+
+  /* PLANNER */
+  .plan-intro{display:flex; align-items:center; gap:10px; margin:4px 2px 12px}
+  .plan-intro .big{font-size:1.6rem}
+  .plan-intro .t{font-weight:800; font-size:1.15rem; line-height:1}
+  .plan-intro .s{font-size:.8rem; color:var(--ink-soft); font-weight:700; margin-top:3px}
+  .hintline{font-size:.82rem; color:var(--ink-soft); font-weight:700; margin:0 2px 12px}
+  .daygrid{display:flex; flex-direction:column; gap:12px; margin-bottom:16px}
+  .part{background:var(--panel); border-radius:16px; box-shadow:var(--shadow); padding:12px 13px; border:3px solid transparent; transition:border-color .15s}
+  .part.active{border-color:var(--celebrate)}
+  .part h4{margin:0 0 9px; font-size:1rem; display:flex; align-items:center; gap:8px}
+  .part h4 .en{margin-left:auto}
+  .slot{display:flex; flex-wrap:wrap; gap:8px; min-height:34px}
+  .slot .ph{color:var(--ink-soft); font-size:.82rem; font-weight:600; align-self:center}
+  .placed{display:inline-flex; align-items:center; gap:6px; background:var(--panel-2); border:2px solid var(--line); border-radius:12px; padding:7px 9px 7px 11px; font-weight:800; font-size:.88rem}
+  .placed.done{opacity:.45; text-decoration:line-through}
+  .placed .x{margin-left:1px; color:#C0392B; font-weight:900; font-size:1rem; padding:0 2px}
+  .deckwrap{background:var(--panel); border-radius:16px; box-shadow:var(--shadow); padding:13px}
+  .deckwrap h4{margin:0 0 4px; font-size:1rem}
+  .deckwrap .s{font-size:.78rem; color:var(--ink-soft); font-weight:700; margin-bottom:11px}
+  .deck{display:flex; flex-wrap:wrap; gap:9px}
+  .chip{display:inline-flex; align-items:center; gap:6px; border-radius:99px; padding:9px 13px; font-weight:800; font-size:.92rem; color:#fff; box-shadow:0 3px 0 rgba(43,43,51,.12); transition:transform .1s}
+  .chip:active{transform:translateY(2px)}
+  .chip.add{background:#fff; color:var(--celebrate); border:2px dashed var(--celebrate); box-shadow:none}
+
+  /* MODALS */
+  .scrim{position:fixed; inset:0; background:rgba(43,43,51,.45); display:grid; place-items:center; padding:18px; z-index:50}
+  .sheet{background:var(--panel); border-radius:22px; width:100%; max-width:460px; max-height:88vh; overflow:auto; padding:20px; box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .sheet h2{margin:0 0 4px; font-size:1.2rem}
+  .sheet .lead{color:var(--ink-soft); font-size:.85rem; font-weight:600; margin:0 0 16px}
+  label.field{display:block; margin:0 0 14px}
+  label.field span{display:block; font-weight:800; font-size:.82rem; margin-bottom:5px}
+  input[type=text], textarea{width:100%; font-family:inherit; font-size:1rem; padding:11px 12px; border:2px solid var(--line); border-radius:12px; background:var(--panel-2); color:var(--ink)}
+  textarea{min-height:74px; resize:vertical}
+  input:focus, textarea:focus{outline:none; border-color:var(--read)}
+  .row2{display:flex; gap:10px}
+  .row2 > *{flex:1}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-weight:800; font-size:1rem; padding:13px 16px; border-radius:14px; background:var(--read); color:#fff; box-shadow:0 4px 0 rgba(43,43,51,.15); width:100%; transition:transform .1s}
+  .btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(43,43,51,.15)}
+  .btn.ghost{background:var(--panel-2); color:var(--ink); box-shadow:0 4px 0 var(--line)}
+  .btn.plum{background:var(--celebrate)}
+  .btn.sky{background:var(--chores)}
+  .btn.teal{background:var(--play)}
+  .btnrow{display:flex; gap:10px; margin-top:6px}
+  .btnrow .btn{width:auto; flex:1}
+  .seg{display:flex; gap:8px; margin:18px 0 12px; border-top:1px solid var(--line); padding-top:16px}
+  .hint{font-size:.78rem; color:var(--ink-soft); font-weight:600; margin-top:-6px; margin-bottom:14px}
+  .regrow{display:flex; gap:8px; align-items:flex-start; margin-bottom:12px}
+  .regrow .num{flex:0 0 auto; width:26px; height:26px; border-radius:8px; background:#F1E4CE; display:grid; place-items:center; font-weight:800; font-size:.82rem; margin-top:8px}
+  .regrow .grow{flex:1}
+  .regrow input{margin-bottom:6px}
+  .photoprev{width:100%; max-height:240px; object-fit:contain; border-radius:12px; background:#F1E4CE; margin-bottom:12px; display:block}
+  .detailmeta{display:flex; gap:8px; flex-wrap:wrap; font-size:.78rem; font-weight:700; color:var(--ink-soft); margin-bottom:12px}
+
+  .celebrate .sheet{text-align:center; border:4px solid var(--celebrate)}
+  .celebrate .big{font-size:3rem; margin:4px 0 6px}
+  .celebrate h2{color:var(--celebrate); font-size:1.5rem}
+  .celebrate .what{font-size:1.15rem; font-weight:800; margin:10px 0 4px}
+  .celebrate .bonus{color:var(--read); font-weight:800; margin:8px 0 18px}
+  .confetti{position:fixed; top:-12px; width:11px; height:16px; z-index:60; border-radius:2px; pointer-events:none}
+  @keyframes fall{to{transform:translateY(108vh) rotate(540deg); opacity:.9}}
+
+  .footnote{text-align:center; color:var(--ink-soft); font-size:.74rem; font-weight:600; margin-top:22px}
+
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <button class="iconbtn" id="navMap" aria-label="Map · 地图">🗺️</button>
+    <div class="brand"><h1>夏日同行</h1><span class="en">Our Summer Journey</span></div>
+    <button class="iconbtn" id="navPlan" aria-label="Zora’s day · 早点的一天">📅</button>
+    <button class="iconbtn" id="navMem" aria-label="Memories · 回忆">🖼️</button>
+    <button class="iconbtn" id="navSettings" aria-label="Settings · 设置">⚙️</button>
+  </header>
+  <main id="view" role="main"></main>
+  <div class="footnote">Made with 記 · every seal is a moment together</div>
+</div>
+<div id="modal-root" aria-live="polite"></div>
+
+<script>
+"use strict";
+(function(){
+  /* ---------- storage (JSON state in localStorage) ---------- */
+  var KEY="summer-journey-v1", memFallback=null, storageOK=true;
+  try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); }catch(e){ storageOK=false; }
+  if(navigator.storage && navigator.storage.persist){ try{ navigator.storage.persist(); }catch(e){} }
+  function load(){ if(!storageOK) return memFallback; try{ var r=localStorage.getItem(KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
+  function save(){ if(!storageOK){ memFallback=state; return; } try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  /* ---------- photo store (IndexedDB) ---------- */
+  var dbP=null, idbOK=true;
+  function openDB(){
+    if(dbP) return dbP;
+    dbP=new Promise(function(res){
+      try{
+        var rq=indexedDB.open("summerJourneyPhotos",1);
+        rq.onupgradeneeded=function(){ rq.result.createObjectStore("photos",{keyPath:"id"}); };
+        rq.onsuccess=function(){ res(rq.result); };
+        rq.onerror=function(){ idbOK=false; res(null); };
+      }catch(e){ idbOK=false; res(null); }
+    });
+    return dbP;
+  }
+  function putPhoto(id,dataUrl){ return openDB().then(function(db){ if(!db) return false; return new Promise(function(res){ try{ var tx=db.transaction("photos","readwrite"); tx.objectStore("photos").put({id:id,dataUrl:dataUrl}); tx.oncomplete=function(){res(true);}; tx.onerror=function(){res(false);}; }catch(e){res(false);} }); }); }
+  function getPhoto(id){ if(!id) return Promise.resolve(null); return openDB().then(function(db){ if(!db) return null; return new Promise(function(res){ try{ var rq=db.transaction("photos","readonly").objectStore("photos").get(id); rq.onsuccess=function(){ res(rq.result?rq.result.dataUrl:null); }; rq.onerror=function(){res(null);}; }catch(e){res(null);} }); }); }
+  function getAllPhotos(){ return openDB().then(function(db){ if(!db) return {}; return new Promise(function(res){ try{ var rq=db.transaction("photos","readonly").objectStore("photos").getAll(); rq.onsuccess=function(){ var m={}; (rq.result||[]).forEach(function(p){m[p.id]=p.dataUrl;}); res(m); }; rq.onerror=function(){res({});}; }catch(e){res({});} }); }); }
+  function delPhoto(id){ if(!id) return; try{ delete photoCache[id]; }catch(e){} openDB().then(function(db){ if(!db) return; try{ db.transaction("photos","readwrite").objectStore("photos").delete(id); }catch(e){} }); }
+
+  function pickPhoto(cb){
+    var inp=document.createElement("input"); inp.type="file"; inp.accept="image/*";
+    inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(!f){ cb(null); return; } downscale(f,cb); };
+    inp.click();
+  }
+  function downscale(file,cb){
+    var img=new Image(), url=URL.createObjectURL(file);
+    img.onload=function(){
+      var max=1000, w=img.width, h=img.height, s=Math.min(1,max/Math.max(w,h));
+      var cw=Math.max(1,Math.round(w*s)), ch=Math.max(1,Math.round(h*s));
+      var c=document.createElement("canvas"); c.width=cw; c.height=ch;
+      c.getContext("2d").drawImage(img,0,0,cw,ch);
+      URL.revokeObjectURL(url);
+      var d; try{ d=c.toDataURL("image/jpeg",0.6); }catch(e){ d=null; }
+      cb(d);
+    };
+    img.onerror=function(){ URL.revokeObjectURL(url); cb(null); };
+    img.src=url;
+  }
+
+  /* ---------- config ---------- */
+  var LANES=[
+    {id:"read",glyph:"讀",zh:"閱讀寫作",en:"Reading & Writing",color:"var(--read)",askNote:true},
+    {id:"project",glyph:"創",zh:"自主專題",en:"My Own Project",color:"var(--project)",askNote:false},
+    {id:"play",glyph:"樂",zh:"自由玩樂",en:"Free Play",color:"var(--play)",askNote:false},
+    {id:"chores",glyph:"助",zh:"我的家務",en:"My Jobs",color:"var(--chores)",askNote:false}
+  ];
+  function lane(id){ return LANES.filter(function(l){return l.id===id;})[0]; }
+  function laneColor(id){ var l=lane(id); return l?l.color:"var(--read)"; }
+
+  var DECK=[
+    {key:"read",emoji:"📖",zh:"阅读",en:"Read",mission:"read",color:"var(--read)"},
+    {key:"write",emoji:"✏️",zh:"写写",en:"Write",mission:"read",color:"var(--read)"},
+    {key:"project",emoji:"🛠️",zh:"我的专题",en:"My project",mission:"project",color:"var(--project)"},
+    {key:"play",emoji:"🪀",zh:"玩耍",en:"Play",mission:"play",color:"var(--play)"},
+    {key:"chores",emoji:"🧺",zh:"家务",en:"Jobs",mission:"chores",color:"var(--chores)"},
+    {key:"draw",emoji:"🎨",zh:"画画",en:"Draw",color:"var(--free)"},
+    {key:"build",emoji:"🧱",zh:"搭积木",en:"Build",color:"var(--free)"},
+    {key:"story",emoji:"📚",zh:"听故事",en:"Story time",color:"var(--free)"},
+    {key:"outside",emoji:"🌳",zh:"户外",en:"Outside",color:"var(--free)"},
+    {key:"bake",emoji:"🧁",zh:"烘焙",en:"Bake",color:"var(--free)"},
+    {key:"music",emoji:"🎵",zh:"音乐",en:"Music",color:"var(--free)"},
+    {key:"puzzle",emoji:"🧩",zh:"拼图",en:"Puzzle",color:"var(--free)"},
+    {key:"friends",emoji:"🧒",zh:"朋友",en:"Friends",color:"var(--free)"},
+    {key:"rest",emoji:"😴",zh:"休息",en:"Rest",color:"var(--free)"}
+  ];
+  function deckCard(key){
+    var d=DECK.filter(function(c){return c.key===key;})[0]; if(d) return d;
+    var cu=(state.settings.customCards||[]).filter(function(c){return c.key===key;})[0];
+    return cu ? {key:cu.key,emoji:cu.emoji,zh:cu.zh,en:cu.zh,color:"var(--free)"} : {key:key,emoji:"⭐",zh:key,en:key,color:"var(--free)"};
+  }
+  var PARTS=[
+    {key:"morning",emoji:"☀️",zh:"早上",en:"Morning"},
+    {key:"lunch",emoji:"🍎",zh:"午饭后",en:"After lunch"},
+    {key:"afternoon",emoji:"🎨",zh:"下午",en:"Afternoon"},
+    {key:"evening",emoji:"🌙",zh:"晚上",en:"Evening"}
+  ];
+
+  function defaultState(){
+    return {
+      app:"summer-journey", version:2,
+      settings:{ perMission:2, milestoneBonus:10, coinNote:"1 🪙 = travel money you decide", customCards:[] },
+      players:[
+        {id:"zora",name:"Zora",emoji:"🐷",color:"#E8A6A0",coins:0,stamps:[]},
+        {id:"zaria",name:"Zaria",emoji:"🐯",color:"#EBC56A",coins:0,stamps:[]},
+        {id:"joyce",name:"Joyce",emoji:"🥚",color:"#F2E2A0",coins:0,stamps:[]},
+        {id:"zac",name:"Zac",emoji:"🥣",color:"#A9CBA0",coins:0,stamps:[]}
+      ],
+      regions:[
+        {id:"r0",name:"Setting Off · 啟程",threshold:0,reached:true,celebration:"Print the map & choose our first reward · 选择第一个奖励"},
+        {id:"r1",name:"Home Harbour · 家之港",threshold:24,reached:false,celebration:"Family film night · 全家电影夜"},
+        {id:"r2",name:"The Long Road · 遠行",threshold:50,reached:false,celebration:"Pick a Saturday outing · 选择周六出游"},
+        {id:"r3",name:"Faraway Shore · 遠方海岸",threshold:78,reached:false,celebration:"A special meal out · 外出大餐"},
+        {id:"r4",name:"The Way Home · 歸途",threshold:106,reached:false,celebration:"Choose the next destination · 选择下一站"},
+        {id:"r5",name:"Summer's End · 夏日終章",threshold:138,reached:false,celebration:"Big summer celebration · 夏日大庆祝"}
+      ],
+      plans:{}
+    };
+  }
+
+  var state=load()||defaultState();
+  migrate();
+  function migrate(){
+    if(!state.settings) state.settings={};
+    if(state.settings.perMission==null) state.settings.perMission=2;
+    if(state.settings.milestoneBonus==null) state.settings.milestoneBonus=10;
+    if(state.settings.coinNote==null) state.settings.coinNote="1 🪙 = travel money you decide";
+    if(!state.settings.customCards) state.settings.customCards=[];
+    if(!state.plans) state.plans={};
+    if(!state.settings.avatarV2){
+      var av={zora:"🐷",zaria:"🐯",joyce:"🥚",zac:"🍲"};
+      var rc={zora:"#E8A6A0",zaria:"#EBC56A",joyce:"#F2E2A0",zac:"#A9CBA0"};
+      (state.players||[]).forEach(function(p){ if(av[p.id]){ p.emoji=av[p.id]; p.color=rc[p.id]; } });
+      state.settings.avatarV2=true;
+    }
+    if(!state.settings.avatarV3){
+      (state.players||[]).forEach(function(p){ if(p.id==="zac" && p.emoji==="🍲") p.emoji="🥣"; });
+      state.settings.avatarV3=true;
+    }
+    (state.players||[]).forEach(function(p){ if(!p.stamps) p.stamps=[]; if(p.coins==null) p.coins=0; });
+    save();
+  }
+
+  var ui={view:"map",player:null};
+  var activePart="morning";
+  var justStamped=null;
+
+  /* ---------- derived ---------- */
+  function familyMeter(){ var n=0; state.players.forEach(function(p){n+=p.stamps.length;}); return n; }
+  function currentIndex(){ var m=familyMeter(),idx=0; for(var i=0;i<state.regions.length;i++){ if(m>=state.regions[i].threshold) idx=i; } return idx; }
+  function nextRegion(){ return state.regions[currentIndex()+1]||null; }
+  function totalCoins(){ var n=0; state.players.forEach(function(p){n+=p.coins;}); return n; }
+  function player(id){ return state.players.filter(function(p){return p.id===id;})[0]; }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function today(){ return new Date().toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+  function dateKey(d){ d=d||new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function isWeekend(){ var g=new Date().getDay(); return g===0||g===6; }
+  function uid(){ return Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7); }
+
+  /* ---------- logging ---------- */
+  function logMission(pid,laneId,note,photoId){
+    var p=player(pid); if(!p) return;
+    var before=currentIndex();
+    p.stamps.push({lane:laneId,date:today(),ts:Date.now(),note:note||"",region:(state.regions[currentIndex()]||{}).name||"",photoId:photoId||""});
+    p.coins+=(Number(state.settings.perMission)||0);
+    justStamped={playerId:pid,idx:p.stamps.length-1};
+    save();
+    var after=currentIndex();
+    render();
+    if(after>before){
+      for(var i=before+1;i<=after;i++){ state.regions[i].reached=true; state.players.forEach(function(pl){pl.coins+=(Number(state.settings.milestoneBonus)||0);}); }
+      save(); render(); showCelebration(state.regions[after]);
+    }
+  }
+
+  /* ---------- render dispatch ---------- */
+  var view=document.getElementById("view");
+  function render(){
+    if(ui.view==="player"&&ui.player) renderPlayer();
+    else if(ui.view==="memories") renderMemories();
+    else if(ui.view==="planner") renderPlanner();
+    else renderMap();
+  }
+  function storageWarn(){ return storageOK?"":'<div class="warnbar">⚠️ This preview can’t save between sessions. Once it’s on your site and added to the iPad Home Screen, it remembers everything. Use ⚙️ → Back up to be safe.</div>'; }
+  function scrollTop(){ try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){ window.scrollTo(0,0); } }
+
+  /* ---------- MAP ---------- */
+  function renderMap(){
+    var m=familyMeter(), ci=currentIndex(), nr=nextRegion(), regs=state.regions;
+    var H=120+(regs.length-1)*116;
+    var nodes=regs.map(function(r,i){ var x=(i===0||i===regs.length-1)?150:(i%2===1?72:228); return {x:x,y:60+i*116}; });
+    var trail="";
+    for(var i=0;i<nodes.length-1;i++){ var done=(i+1)<=ci;
+      trail+='<line x1="'+nodes[i].x+'" y1="'+nodes[i].y+'" x2="'+nodes[i+1].x+'" y2="'+nodes[i+1].y+'" stroke="'+(done?"var(--trail-done)":"var(--trail)")+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 13"/>'; }
+    var marks="";
+    regs.forEach(function(r,i){ var n=nodes[i], reached=i<=ci, isCur=i===ci;
+      var fill=reached?(i===0?"var(--gold)":"var(--read)"):"#F1E4CE", tc=reached?"#fff":"var(--ink-soft)";
+      marks+="<g>";
+      if(isCur) marks+='<circle cx="'+n.x+'" cy="'+n.y+'" r="26" fill="none" stroke="var(--celebrate)" stroke-width="3" opacity=".7"/>';
+      marks+='<circle cx="'+n.x+'" cy="'+n.y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/>';
+      marks+='<text x="'+n.x+'" y="'+(n.y+5)+'" text-anchor="middle" class="marker-num" fill="'+tc+'">'+((reached&&i!==0)?"✓":(i+1))+"</text></g>";
+    });
+    var tx,ty;
+    if(nr){ var cn=nodes[ci], nn=nodes[ci+1], span=(nr.threshold-regs[ci].threshold)||1, fr=Math.max(0,Math.min(1,(m-regs[ci].threshold)/span)); tx=cn.x+(nn.x-cn.x)*fr; ty=cn.y+(nn.y-cn.y)*fr; }
+    else { tx=nodes[ci].x; ty=nodes[ci].y; }
+    var svg='<svg class="trail" viewBox="0 0 300 '+H+'" role="img" aria-label="Journey map">'+trail+marks+'<text x="'+tx+'" y="'+(ty-26)+'" text-anchor="middle" font-size="30">🎒</text><g id="photopins"></g></svg>';
+
+    var banner, meterHTML;
+    if(nr){ var inStage=m-regs[ci].threshold, stageSpan=nr.threshold-regs[ci].threshold, pct=Math.max(4,Math.round(inStage/stageSpan*100));
+      banner='<div class="nextline"><div class="nextflag">🚩</div><div><div class="label">Next stop · 下一站</div><div class="name">'+esc(nr.name)+'</div><div class="cel">🎉 '+esc(nr.celebration)+'</div></div></div>';
+      meterHTML='<div class="meterwrap"><div class="meter"><i style="width:'+pct+'%"></i></div><div class="meterlabel"><span>'+inStage+' / '+stageSpan+' seals</span><span>🪙 '+totalCoins()+' family coins</span></div></div>';
+    } else {
+      banner='<div class="nextline"><div class="nextflag">🏁</div><div><div class="label">Journey complete · 旅程圆满</div><div class="name">You reached '+esc(regs[ci].name)+'!</div><div class="cel">🎉 '+esc(regs[ci].celebration)+'</div></div></div>';
+      meterHTML='<div class="meterwrap"><div class="meterlabel"><span>'+m+' seals collected together</span><span>🪙 '+totalCoins()+' family coins</span></div></div>';
+    }
+
+    var zb=isWeekend()
+      ? '<button class="zora-banner" data-plan><span class="big">🌈</span><span><span class="t">周末啦！自由玩耍</span><br><span class="s">It’s the weekend — free play. Plan on a weekday.</span></span></button>'
+      : '<button class="zora-banner" data-plan><span class="big">📅</span><span><span class="t">Zora, plan your day · 早点，安排今天</span><br><span class="s">☀️ → 🌙 your day, your plan</span></span></button>';
+
+    var pcards=state.players.map(function(p){
+      return '<button class="pcard" data-pick="'+p.id+'"><span class="avatar" style="background:'+p.color+'">'+esc(p.emoji)+'</span><span><span class="nm">'+esc(p.name)+'</span><span class="coins">🪙 '+p.coins+' · '+p.stamps.length+' seals</span></span></button>';
+    }).join("");
+
+    view.innerHTML=storageWarn()+
+      '<div class="stack">'+
+        '<div class="card mapcard">'+banner+meterHTML+svg+'</div>'+
+        zb+
+        '<div><div class="who-title"><span style="font-weight:800">谁来记？</span><span class="en">WHO’S LOGGING?</span></div><div class="players">'+pcards+'</div></div>'+
+      '</div>';
+
+    each("[data-pick]",function(b){ b.onclick=function(){ ui.player=b.getAttribute("data-pick"); ui.view="player"; justStamped=null; render(); scrollTop(); }; });
+    var pb=view.querySelector("[data-plan]"); if(pb) pb.onclick=function(){ ui.view="planner"; render(); scrollTop(); };
+    addMapPhotos(nodes);
+  }
+
+  /* photos pinned along the trail */
+  var photoCache={};
+  function getPhotoCached(id){ if(Object.prototype.hasOwnProperty.call(photoCache,id)) return Promise.resolve(photoCache[id]); return getPhoto(id).then(function(d){ photoCache[id]=d; return d; }); }
+  function addMapPhotos(nodes){
+    var byRegion={};
+    state.players.forEach(function(p){ p.stamps.forEach(function(s){ if(s.photoId && s.region){ var cur=byRegion[s.region]; if(!cur){ byRegion[s.region]={photoId:s.photoId,ts:s.ts,count:1}; } else { cur.count++; if(s.ts>cur.ts){ cur.ts=s.ts; cur.photoId=s.photoId; } } } }); });
+    var pins=[];
+    state.regions.forEach(function(r,i){ var e=byRegion[r.name]; if(e) pins.push({i:i,photoId:e.photoId,count:e.count}); });
+    if(!pins.length) return;
+    Promise.all(pins.map(function(pin){ return getPhotoCached(pin.photoId).then(function(d){ return {pin:pin,d:d}; }); })).then(function(items){
+      var g=document.getElementById("photopins"); if(!g) return; var html="";
+      items.forEach(function(it){ if(!it.d) return; var n=nodes[it.pin.i]; var side=n.x<150?-1:1;
+        var px=n.x+side*48, py=n.y-4, sz=40, rot=side*6;
+        html+='<g data-photopin transform="rotate('+rot+' '+px+' '+py+')" style="cursor:pointer">'+
+          '<rect x="'+(px-sz/2-3)+'" y="'+(py-sz/2-3)+'" width="'+(sz+6)+'" height="'+(sz+11)+'" rx="6" fill="#fff" stroke="var(--line)"/>'+
+          '<image href="'+it.d+'" x="'+(px-sz/2)+'" y="'+(py-sz/2)+'" width="'+sz+'" height="'+sz+'" preserveAspectRatio="xMidYMid slice"/>'+
+          (it.pin.count>1?'<circle cx="'+(px+sz/2-1)+'" cy="'+(py-sz/2-1)+'" r="9" fill="var(--read)"/><text x="'+(px+sz/2-1)+'" y="'+(py-sz/2+3)+'" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">'+it.pin.count+'</text>':'')+
+          '</g>';
+      });
+      g.innerHTML=html;
+      each("[data-photopin]",function(el){ el.addEventListener("click",function(){ ui.view="memories"; render(); scrollTop(); }); });
+    });
+  }
+
+  /* ---------- PLAYER ---------- */
+  function renderPlayer(){
+    var p=player(ui.player); if(!p){ ui.view="map"; return renderMap(); }
+    var counts={}; p.stamps.forEach(function(s){ counts[s.lane]=(counts[s.lane]||0)+1; });
+    var laneBtns=LANES.map(function(l){ var c=counts[l.id]||0;
+      return '<button class="lane" style="background:'+l.color+'" data-lane="'+l.id+'">'+(c>0?'<span class="cnt">'+c+'</span>':'')+'<span class="glyph">'+l.glyph+'</span><span class="lname">'+l.zh+'<br><span class="en">'+l.en+'</span></span><span class="tap">＋ tap 盖章</span></button>';
+    }).join("");
+
+    var seals;
+    if(p.stamps.length===0){ seals='<div class="empty">No seals yet — tap a mission above to press your first one. 还没有印章，盖一个吧！</div>'; }
+    else { var recent=p.stamps.slice(-48), base=p.stamps.length-recent.length;
+      seals=recent.map(function(s,i){ var realIdx=base+i, l=lane(s.lane)||LANES[0];
+        var isNew=justStamped&&justStamped.playerId===p.id&&realIdx===justStamped.idx;
+        return '<button class="seal'+(isNew?" pop":"")+(s.photoId?" haspic":"")+'" style="background:'+l.color+'" data-pid="'+p.id+'" data-idx="'+realIdx+'" title="'+esc(l.zh)+' · '+esc(s.date)+'">'+l.glyph+(s.photoId?'<span class="dot">📷</span>':"")+"</button>";
+      }).join("");
+    }
+
+    var planBtn = (p.id==="zora")
+      ? '<button class="planbtn" data-plan><span class="big">📅</span><span>Plan my day · 我的一天<br><span class="en" style="color:#9A5B43">Mon–Fri · ☀️→🌙</span></span></button>' : "";
+
+    view.innerHTML=
+      '<button class="back" data-back>‹ <span style="font-weight:800">地图</span> <span class="en">Map</span></button>'+
+      '<div class="phead"><span class="avatar" style="background:'+p.color+'">'+esc(p.emoji)+'</span><div><div class="nm">'+esc(p.name)+'</div><div class="coins">🪙 '+p.coins+' coins · '+p.stamps.length+' seals</div></div></div>'+
+      planBtn+
+      '<div class="lanes">'+laneBtns+'</div>'+
+      '<div class="card collbox"><h3>印章收藏 · Seal Collection</h3><div class="sub">Tap a seal to add a photo or note — or delete one tapped by mistake. 点一下印章可加照片，或删掉点错的。</div><div class="seals">'+seals+'</div></div>';
+
+    view.querySelector("[data-back]").onclick=function(){ ui.view="map"; justStamped=null; render(); scrollTop(); };
+    var pb=view.querySelector("[data-plan]"); if(pb) pb.onclick=function(){ ui.view="planner"; render(); scrollTop(); };
+    each("[data-lane]",function(b){ b.onclick=function(){ var lid=b.getAttribute("data-lane"); if(lane(lid).askNote) openLogSheet(p.id,lid); else logMission(p.id,lid,"",""); }; });
+    each("[data-idx]",function(b){ b.onclick=function(){ openSealDetail(b.getAttribute("data-pid"), +b.getAttribute("data-idx")); }; });
+  }
+
+  /* ---------- MEMORIES ---------- */
+  function renderMemories(){
+    view.innerHTML='<button class="back" data-back>‹ <span style="font-weight:800">地图</span> <span class="en">Map</span></button><div class="empty">Loading memories…</div>';
+    view.querySelector("[data-back]").onclick=function(){ ui.view="map"; render(); scrollTop(); };
+    getAllPhotos().then(function(pmap){
+      var moments=[];
+      state.players.forEach(function(p){ p.stamps.forEach(function(s,idx){ if((s.note&&s.note.trim())||s.photoId) moments.push({p:p,s:s,idx:idx}); }); });
+      moments.sort(function(a,b){ return b.s.ts-a.s.ts; });
+
+      var head='<button class="back" data-back>‹ <span style="font-weight:800">地图</span> <span class="en">Map</span></button>'+
+        '<div class="mtop"><div><div class="nm" style="font-size:1.3rem;font-weight:800">回忆墙</div><div class="en">Memory Wall · '+moments.length+' moments</div></div>'+
+        (moments.length?'<button class="btn teal" style="width:auto" data-book>📖 Save book</button>':"")+'</div>';
+
+      if(!moments.length){
+        view.innerHTML=head+'<div class="card"><div class="empty">No memories yet.<br>Add a photo to any seal (tap a seal in someone’s collection), or write a note when logging Reading &amp; Writing. 给印章加照片，这里就会出现回忆。'+(idbOK?"":"<br><br>⚠️ Photos need the installed Home-Screen app — this preview can’t store them.")+'</div></div>';
+        bindMem(pmap,moments); return;
+      }
+      var cards=moments.map(function(mo){ var l=lane(mo.s.lane)||LANES[0]; var pic=mo.s.photoId&&pmap[mo.s.photoId];
+        var top = pic ? '<img class="ph" src="'+pic+'" alt="">' : '<div class="nophoto">'+l.glyph+'</div>';
+        return '<div class="mcard" data-pid="'+mo.p.id+'" data-idx="'+mo.idx+'">'+top+
+          '<div class="body"><div class="who"><span class="miniseal" style="background:'+l.color+'">'+l.glyph+'</span>'+esc(mo.p.emoji)+' '+esc(mo.p.name)+'</div>'+
+          '<div class="when"><span class="pill">'+esc(mo.s.date)+'</span>'+(mo.s.region?'<span class="pill">📍 '+esc(mo.s.region)+'</span>':"")+'</div>'+
+          (mo.s.note&&mo.s.note.trim()?'<div class="nt">'+esc(mo.s.note)+'</div>':"")+'</div></div>';
+      }).join("");
+      view.innerHTML=head+'<div class="mwall">'+cards+'</div>';
+      bindMem(pmap,moments);
+    });
+  }
+  function bindMem(pmap,moments){
+    view.querySelector("[data-back]").onclick=function(){ ui.view="map"; render(); scrollTop(); };
+    each(".mcard",function(c){ c.onclick=function(){ openSealDetail(c.getAttribute("data-pid"), +c.getAttribute("data-idx")); }; });
+    var bk=view.querySelector("[data-book]"); if(bk) bk.onclick=function(){ exportBook(pmap,moments); };
+  }
+
+  /* ---------- PLANNER ---------- */
+  function renderPlanner(){
+    var plan=todayPlan();
+    var parts=PARTS.map(function(pt){
+      var arr=plan.parts[pt.key]||[];
+      var placed=arr.length? arr.map(function(c){ var d=deckCard(c.key);
+        return '<span class="placed'+(c.done?" done":"")+'" data-part="'+pt.key+'" data-iid="'+c.iid+'">'+d.emoji+' '+esc(d.zh)+'<button class="x" data-rm="'+pt.key+'|'+c.iid+'" aria-label="remove">×</button></span>';
+      }).join("") : '<span class="ph">tap activities below to add 把活动加到这里</span>';
+      return '<div class="part'+(activePart===pt.key?" active":"")+'" data-part="'+pt.key+'"><h4>'+pt.emoji+' '+pt.zh+'<span class="en">'+pt.en+'</span></h4><div class="slot">'+placed+'</div></div>';
+    }).join("");
+
+    var chips=DECK.concat((state.settings.customCards||[]).map(function(c){return {key:c.key,emoji:c.emoji,zh:c.zh,en:c.zh,color:"var(--free)"};}))
+      .map(function(c){ return '<button class="chip" style="background:'+c.color+'" data-card="'+c.key+'">'+c.emoji+' '+esc(c.zh)+'</button>'; }).join("");
+    chips+='<button class="chip add" data-addcard>＋ 自己加</button>';
+
+    var weekendNote = isWeekend()
+      ? '<div class="warnbar" style="background:#E8F6EF;color:#1F6E58">🌈 It’s the weekend — this is really for Mon–Fri. You can still plan if you like!</div>' : "";
+
+    view.innerHTML=
+      '<button class="back" data-back>‹ <span style="font-weight:800">地图</span> <span class="en">Map</span></button>'+
+      '<div class="plan-intro"><span class="big">📅</span><div><div class="t">我的一天</div><div class="s">Plan My Day · your day, your plan</div></div></div>'+
+      weekendNote+
+      '<div class="hintline">① Tap a time to choose it ② tap activities to add them ③ tap a card when it’s done ✓ 选时间 → 加活动 → 做完打勾</div>'+
+      '<div class="daygrid">'+parts+'</div>'+
+      '<div class="deckwrap"><h4>活动卡片 · Activity cards</h4><div class="s">Reading, project, play and jobs press your seals when you finish them.</div><div class="deck">'+chips+'</div></div>'+
+      '<div class="btnrow" style="margin-top:16px"><button class="btn ghost" data-fresh>🧹 Start a fresh day 重新开始</button></div>';
+
+    view.querySelector("[data-back]").onclick=function(){ ui.view="map"; render(); scrollTop(); };
+    each(".part",function(el){ el.addEventListener("click",function(e){ if(e.target.closest("[data-rm]")) return; if(e.target.closest(".placed")) return; activePart=el.getAttribute("data-part"); renderPlanner(); }); });
+    each(".placed",function(el){ el.addEventListener("click",function(e){ if(e.target.closest("[data-rm]")) return; togglePlan(el.getAttribute("data-part"), el.getAttribute("data-iid")); }); });
+    each("[data-rm]",function(b){ b.onclick=function(e){ e.stopPropagation(); var pr=b.getAttribute("data-rm").split("|"); removePlan(pr[0],pr[1]); }; });
+    each("[data-card]",function(b){ b.onclick=function(){ addToActive(b.getAttribute("data-card")); }; });
+    var ac=view.querySelector("[data-addcard]"); if(ac) ac.onclick=openAddCard;
+    var fr=view.querySelector("[data-fresh]"); if(fr) fr.onclick=function(){ if(confirm("Start a fresh plan for today? This clears today’s cards (your seals stay).")){ plan.parts={morning:[],lunch:[],afternoon:[],evening:[]}; save(); renderPlanner(); } };
+  }
+  function todayPlan(){ var k=dateKey(); if(!state.plans[k]) state.plans[k]={parts:{morning:[],lunch:[],afternoon:[],evening:[]}}; return state.plans[k]; }
+  function addToActive(key){ var plan=todayPlan(); if(!plan.parts[activePart]) plan.parts[activePart]=[]; plan.parts[activePart].push({iid:uid(),key:key,done:false,sealPressed:false}); save(); renderPlanner(); }
+  function removePlan(partKey,iid){ var plan=todayPlan(); plan.parts[partKey]=(plan.parts[partKey]||[]).filter(function(c){return c.iid!==iid;}); save(); renderPlanner(); }
+  function togglePlan(partKey,iid){
+    var plan=todayPlan(); var card=(plan.parts[partKey]||[]).filter(function(c){return c.iid===iid;})[0]; if(!card) return;
+    var d=deckCard(card.key); card.done=!card.done;
+    if(card.done && d.mission && !card.sealPressed){ card.sealPressed=true; save(); logMission("zora",d.mission,"",""); return; }
+    save(); renderPlanner();
+  }
+  function openAddCard(){
+    sheet('<div class="sheet"><h2>＋ Add your own card</h2><p class="lead">加一个你自己的活动卡片</p>'+
+      '<label class="field"><span>Emoji</span><input type="text" id="acEmoji" value="⭐" maxlength="4"></label>'+
+      '<label class="field"><span>Name · 名字</span><input type="text" id="acName" placeholder="e.g. 滑板 Skating"></label>'+
+      '<div class="btnrow"><button class="btn ghost" data-x>Cancel</button><button class="btn" data-ok>Add 加上</button></div></div>');
+    modalRoot.querySelector("[data-x]").onclick=closeModal;
+    modalRoot.querySelector("[data-ok]").onclick=function(){ var n=modalRoot.querySelector("#acName").value.trim(); if(!n){ closeModal(); return; }
+      state.settings.customCards.push({key:"c_"+uid(),emoji:modalRoot.querySelector("#acEmoji").value||"⭐",zh:n}); save(); closeModal(); renderPlanner(); };
+  }
+
+  /* ---------- modals ---------- */
+  var modalRoot=document.getElementById("modal-root");
+  function closeModal(){ modalRoot.innerHTML=""; }
+  function sheet(html,cls){ modalRoot.innerHTML='<div class="scrim '+(cls||"")+'" data-scrim>'+html+'</div>'; modalRoot.querySelector("[data-scrim]").addEventListener("click",function(e){ if(e.target.hasAttribute("data-scrim")) closeModal(); }); }
+
+  /* log sheet (reading/writing: note + photo) */
+  function openLogSheet(pid,laneId){
+    var reg=(state.regions[currentIndex()]||{}).name||""; var pending={photoId:""};
+    sheet('<div class="sheet"><h2>讀 What did you read or write?</h2><p class="lead">今天读了什么、写了什么？旅行的话写下你看到的地方或一个新词。(Optional)</p>'+
+      '<label class="field"><span>Your note · 你的记录</span><textarea id="noteText" placeholder="e.g. Read about Kyoto temples — new word 紅葉"></textarea></label>'+
+      '<div id="photoSlot"></div>'+(reg?'<div class="hint">📍 '+esc(reg)+'</div>':"")+
+      '<div class="btnrow"><button class="btn ghost" data-photo>📷 Add photo</button><button class="btn" data-save>Press seal 盖章 ✓</button></div></div>');
+    var ta=modalRoot.querySelector("#noteText"); if(ta) ta.focus();
+    function refreshSlot(){ var s=modalRoot.querySelector("#photoSlot"); if(!pending.dataUrl){ s.innerHTML=""; return; } s.innerHTML='<img class="photoprev" src="'+pending.dataUrl+'" alt="">'; }
+    modalRoot.querySelector("[data-photo]").onclick=function(){ if(!idbOK){ alert("Photos need the installed Home-Screen app (this preview can’t store them)."); return; } pickPhoto(function(d){ if(!d) return; pending.dataUrl=d; var id="ph_"+uid(); photoCache[id]=d; putPhoto(id,d).then(function(ok){ if(ok) pending.photoId=id; }); refreshSlot(); }); };
+    modalRoot.querySelector("[data-save]").onclick=function(){ var v=ta?ta.value:""; closeModal(); logMission(pid,laneId,v,pending.photoId); };
+  }
+
+  /* seal detail: view + add/replace photo + edit note */
+  function openSealDetail(pid,idx){
+    var p=player(pid); if(!p) return; var s=p.stamps[idx]; if(!s) return; var l=lane(s.lane)||LANES[0];
+    sheet('<div class="sheet"><h2><span style="font-family:var(--serif)">'+l.glyph+'</span> '+esc(l.zh)+'</h2>'+
+      '<div class="detailmeta"><span class="pill">'+esc(p.emoji)+' '+esc(p.name)+'</span><span class="pill">'+esc(s.date)+'</span>'+(s.region?'<span class="pill">📍 '+esc(s.region)+'</span>':"")+'</div>'+
+      '<div id="dPhoto"><div class="empty" style="padding:0 0 12px">Loading…</div></div>'+
+      '<label class="field"><span>Note · 记录</span><textarea id="dNote">'+esc(s.note||"")+'</textarea></label>'+
+      '<div class="btnrow"><button class="btn ghost" data-photo>📷 '+(s.photoId?"Change photo":"Add photo")+'</button><button class="btn" data-save>Save 保存</button></div>'+
+      (s.photoId?'<button class="btn ghost" style="margin-top:10px;color:#9A3412" data-delpic>Remove photo 删除照片</button>':"")+
+      '<button class="btn ghost" style="margin-top:10px;color:#9A3412" data-delseal>🗑️ Delete this seal 删除这个印章</button>'+'</div>');
+    var pending={photoId:s.photoId||"", changed:false};
+    function showPhoto(){ var box=modalRoot.querySelector("#dPhoto"); if(!pending.photoId){ box.innerHTML=""; return; }
+      getPhoto(pending.photoId).then(function(d){ box.innerHTML=d?'<img class="photoprev" src="'+d+'" alt="">':""; }); }
+    showPhoto();
+    modalRoot.querySelector("[data-photo]").onclick=function(){ if(!idbOK){ alert("Photos need the installed Home-Screen app (this preview can’t store them)."); return; } pickPhoto(function(d){ if(!d) return; var id="ph_"+uid(); photoCache[id]=d; putPhoto(id,d).then(function(ok){ if(ok){ pending.photoId=id; pending.changed=true; showPhoto(); var b=modalRoot.querySelector("[data-delpic]"); if(b) b.style.display=""; } }); }); };
+    var del=modalRoot.querySelector("[data-delpic]"); if(del) del.onclick=function(){ pending.photoId=""; pending.changed=true; showPhoto(); del.style.display="none"; };
+    modalRoot.querySelector("[data-save]").onclick=function(){
+      var oldId=s.photoId||""; if(pending.changed && oldId && oldId!==pending.photoId) delPhoto(oldId);
+      s.photoId=pending.photoId; s.note=modalRoot.querySelector("#dNote").value; save(); closeModal(); render();
+    };
+    modalRoot.querySelector("[data-delseal]").onclick=function(){
+      if(!confirm("Delete this seal? Use this only if it was tapped by mistake — the seal and any photo on it are removed and the coin is given back.")) return;
+      if(s.photoId) delPhoto(s.photoId);
+      var ix=p.stamps.indexOf(s); if(ix>-1) p.stamps.splice(ix,1);
+      p.coins=Math.max(0, p.coins-(Number(state.settings.perMission)||0));
+      justStamped=null; save(); closeModal(); render();
+    };
+  }
+
+  /* celebration */
+  function showCelebration(region){
+    sheet('<div class="sheet"><div class="big">🎉</div><h2>You reached it together!</h2><div class="lead">到站啦！全家一起完成了</div>'+
+      '<div class="what">'+esc(region.name)+'</div><div class="what" style="color:var(--celebrate)">🎁 '+esc(region.celebration)+'</div>'+
+      '<div class="bonus">Everyone earns 🪙 '+(Number(state.settings.milestoneBonus)||0)+' bonus coins!</div>'+
+      '<button class="btn plum" data-yay>Hooray! 万岁 🎊</button></div>',"celebrate");
+    modalRoot.querySelector("[data-yay]").onclick=closeModal; confetti();
+  }
+  function confetti(){
+    if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var cols=["#E8503A","#F3C14B","#1F9E84","#3F78D8","#C0457B","#FF8FA3"];
+    for(var i=0;i<48;i++){ (function(i){ var d=document.createElement("div"); d.className="confetti"; d.style.left=Math.random()*100+"vw"; d.style.background=cols[i%cols.length];
+      var dur=2.4+Math.random()*1.6, dl=Math.random()*0.5; d.style.animation="fall "+dur+"s linear "+dl+"s forwards"; d.style.transform="rotate("+Math.random()*360+"deg)";
+      document.body.appendChild(d); setTimeout(function(){ d.remove(); },(dur+dl)*1000+200); })(i); }
+  }
+
+  /* settings */
+  function openSettings(){
+    var s=state.settings;
+    var pl=state.players.map(function(p,i){ return '<div class="regrow"><div class="num" style="background:'+p.color+';color:#fff">'+esc(p.emoji)+'</div><div class="grow"><input type="text" data-pname="'+i+'" value="'+esc(p.name)+'"><input type="text" data-pemoji="'+i+'" value="'+esc(p.emoji)+'" style="max-width:90px"></div></div>'; }).join("");
+    var rg=state.regions.map(function(r,i){ return '<div class="regrow"><div class="num">'+(i+1)+'</div><div class="grow"><input type="text" data-rname="'+i+'" value="'+esc(r.name)+'" placeholder="Stop name · 站名"><div class="row2"><input type="text" inputmode="numeric" data-rthr="'+i+'" value="'+esc(r.threshold)+'" placeholder="seals" style="max-width:108px"><input type="text" data-rcel="'+i+'" value="'+esc(r.celebration)+'" placeholder="Celebration · 庆祝"></div></div>'+(i>0?'<button class="x" data-rmstop="'+i+'" aria-label="remove" style="color:#9A3412;font-size:1.3rem;font-weight:900;align-self:flex-start;margin-top:4px;padding:2px 4px">×</button>':"")+'</div>'; }).join("");
+    rg+='<button class="btn ghost" data-addstop style="margin-bottom:4px">＋ Add a stop 加一站</button>';
+    sheet('<div class="sheet"><h2>⚙️ Settings · 设置</h2><p class="lead">Rename the stops to your real trip and choose each celebration.</p>'+
+      '<div style="font-weight:800;margin:4px 0 10px">Coins · 旅行币</div><div class="row2"><label class="field"><span>Per mission</span><input type="text" inputmode="numeric" id="setPer" value="'+esc(s.perMission)+'"></label><label class="field"><span>Milestone bonus</span><input type="text" inputmode="numeric" id="setBonus" value="'+esc(s.milestoneBonus)+'"></label></div>'+
+      '<label class="field"><span>What a coin is worth (your note)</span><input type="text" id="setCoinNote" value="'+esc(s.coinNote)+'"></label>'+
+      '<div class="seg" style="flex-direction:column"><div style="font-weight:800;margin-bottom:8px">Players · 家人</div>'+pl+'</div>'+
+      '<div style="font-weight:800;margin:4px 0 8px">The journey · 旅程站点</div><div class="hint">Use 6–10 stops. Rename them to your real trip and set how many seals reach each — stops auto-order by seal count.</div>'+rg+
+      '<button class="btn" data-save-settings>Save 保存</button>'+
+      '<div class="seg" style="flex-direction:column"><div style="font-weight:800;margin-bottom:4px">Keep it safe · 备份</div><div class="hint">Back up the seals & plans to a small file. Photos live on the iPad — use “Save book” on the Memory Wall to keep those.</div>'+
+      '<div class="btnrow"><button class="btn sky" data-export>⬇︎ Back up data</button><button class="btn ghost" data-import>⬆︎ Restore</button></div>'+
+      '<button class="btn ghost" style="margin-top:10px;color:#9A3412" data-reset>Reset everything 全部重置</button><input type="file" id="importFile" accept="application/json,.json" style="display:none"></div></div>');
+
+    function readSettingsInputs(){
+      var per=modalRoot.querySelector("#setPer"); if(per) s.perMission=parseInt(per.value,10)||0;
+      var bon=modalRoot.querySelector("#setBonus"); if(bon) s.milestoneBonus=parseInt(bon.value,10)||0;
+      var cn=modalRoot.querySelector("#setCoinNote"); if(cn) s.coinNote=cn.value;
+      each("[data-pname]",function(inp){ var i=+inp.getAttribute("data-pname"); if(state.players[i]) state.players[i].name=inp.value||state.players[i].name; });
+      each("[data-pemoji]",function(inp){ var i=+inp.getAttribute("data-pemoji"); if(state.players[i]) state.players[i].emoji=inp.value||state.players[i].emoji; });
+      each("[data-rname]",function(inp){ var i=+inp.getAttribute("data-rname"); if(state.regions[i]) state.regions[i].name=inp.value||state.regions[i].name; });
+      each("[data-rthr]",function(inp){ var i=+inp.getAttribute("data-rthr"); var v=parseInt(inp.value,10); if(state.regions[i]&&!isNaN(v)) state.regions[i].threshold=v; });
+      each("[data-rcel]",function(inp){ var i=+inp.getAttribute("data-rcel"); if(state.regions[i]) state.regions[i].celebration=inp.value; });
+    }
+    function sortStops(){ state.regions.sort(function(a,b){ return a.threshold-b.threshold; }); }
+    modalRoot.querySelector("[data-save-settings]").onclick=function(){ readSettingsInputs(); sortStops(); save(); closeModal(); render(); };
+    each("[data-addstop]",function(b){ b.onclick=function(){ if(state.regions.length>=10){ alert("Up to 10 stops."); return; } readSettingsInputs(); var last=state.regions[state.regions.length-1]; state.regions.push({id:"r"+uid(),name:"New stop · 新一站",threshold:(last?last.threshold:0)+25,reached:false,celebration:"A celebration · 庆祝一下"}); save(); openSettings(); }; });
+    each("[data-rmstop]",function(b){ b.onclick=function(){ var i=+b.getAttribute("data-rmstop"); if(state.regions.length<=2){ alert("Keep at least 2 stops."); return; } readSettingsInputs(); state.regions.splice(i,1); save(); openSettings(); }; });
+    modalRoot.querySelector("[data-export]").onclick=function(){ var blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}); var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="summer-journey-backup-"+dateKey()+".json"; document.body.appendChild(a); a.click(); a.remove(); };
+    var fi=modalRoot.querySelector("#importFile");
+    modalRoot.querySelector("[data-import]").onclick=function(){ fi.click(); };
+    fi.onchange=function(){ var f=fi.files[0]; if(!f) return; var r=new FileReader(); r.onload=function(){ try{ var data=JSON.parse(r.result); if(data&&data.app==="summer-journey"&&data.players&&data.regions){ state=data; migrate(); save(); closeModal(); ui.view="map"; render(); } else alert("That file isn’t a Summer Journey backup."); }catch(e){ alert("Couldn’t read that file."); } }; r.readAsText(f); };
+    modalRoot.querySelector("[data-reset]").onclick=function(){ if(confirm("Reset everything? This clears seals, coins, plans and notes. Back up first if unsure.")){ state=defaultState(); save(); closeModal(); ui.view="map"; render(); } };
+  }
+
+  /* memory book export (HTML keepsake with photos embedded) */
+  function exportBook(pmap,moments){
+    var rows=moments.slice().sort(function(a,b){ return a.s.ts-b.s.ts; }).map(function(mo){ var l=lane(mo.s.lane)||LANES[0]; var pic=mo.s.photoId&&pmap[mo.s.photoId];
+      return '<figure>'+(pic?'<img src="'+pic+'">':'<div class="g">'+l.glyph+'</div>')+'<figcaption><b>'+esc(mo.p.name)+'</b> · '+esc(mo.s.date)+(mo.s.region?' · 📍 '+esc(mo.s.region):"")+(mo.s.note?'<br>'+esc(mo.s.note):"")+'</figcaption></figure>';
+    }).join("");
+    var html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>夏日同行 · Memory Book</title><style>body{font-family:-apple-system,system-ui,"PingFang SC",sans-serif;background:#FFF7EC;color:#2B2B33;margin:0;padding:28px}h1{text-align:center}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;max-width:1100px;margin:0 auto}figure{margin:0;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(122,75,40,.12)}figure img{width:100%;display:block}.g{aspect-ratio:1;display:grid;place-items:center;font-size:3rem;background:#FCE5DF;font-family:serif}figcaption{padding:10px 12px;font-size:.9rem}</style></head><body><h1>夏日同行 · Our Summer Journey</h1><div class="grid">'+rows+'</div></body></html>';
+    var blob=new Blob([html],{type:"text/html"}); var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="summer-memory-book-"+dateKey()+".html"; document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  /* ---------- util + nav ---------- */
+  function each(sel,fn){ Array.prototype.forEach.call(view.querySelectorAll(sel),fn); var inModal=modalRoot.querySelectorAll(sel); if(inModal.length) Array.prototype.forEach.call(inModal,fn); }
+  document.getElementById("navMap").onclick=function(){ ui.view="map"; render(); scrollTop(); };
+  document.getElementById("navPlan").onclick=function(){ ui.view="planner"; render(); scrollTop(); };
+  document.getElementById("navMem").onclick=function(){ ui.view="memories"; render(); scrollTop(); };
+  document.getElementById("navSettings").onclick=openSettings;
+
+  if("serviceWorker" in navigator){ window.addEventListener("load",function(){ navigator.serviceWorker.register("./sw.js").catch(function(){}); }); }
+
+  render();
+})();
+</script>
+</body>
+</html>
